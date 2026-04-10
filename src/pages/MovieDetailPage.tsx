@@ -37,5 +37,35 @@ import type { Movie } from "../types/movie";
 //
 
 export const MovieDetailPage = () => {
-  return <div>TODO : compléter cette page</div>;
+  const {id} = useParams();
+
+  const {data, isLoading, isError } = useQuery({
+    
+    queryKey: ["movie", id],
+    queryFn: async () => {
+      const res = await api.get(`/api/movies/${id}`);
+      return res.data;
+    },
+
+  });
+
+  if (isLoading) return <p> loading </p>;
+  if (isError) return <p> Error </p>;
+
+  return (
+    <div>
+
+      <h1>{data.title}</h1>
+
+      <img src={data.imageUrl} alt={data.title}/>
+
+      <p> realisateur : {data.director} </p>
+      <p> année : {data.year} </p>
+      <p> genre : {data.genre} </p>
+
+      <p>{data.description}</p>
+
+    </div>
+  );
+
 };
